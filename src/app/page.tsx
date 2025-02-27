@@ -4,13 +4,13 @@ export default function Home() {
   return (
     <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen w-screen text-gray-100">
       <header className="p-4 flex justify-center items-center space-x-4">
-        <Button variant="outline" className="bg-gray-700">
+        <Button variant="outline" className="bg-gray-700 border-none">
           5 min
         </Button>
-        <Button variant="outline" className="bg-gray-700">
+        <Button variant="outline" className="bg-gray-700 border-none">
           10 min
         </Button>
-        <Button variant="outline" className="bg-gray-700">
+        <Button variant="outline" className="bg-gray-700 border-none">
           15 min
         </Button>
       </header>
