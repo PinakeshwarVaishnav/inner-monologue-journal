@@ -4,10 +4,28 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [activeButton, setActiveButton] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   const handleButtonClick = (value: string) => {
     setActiveButton(value);
     console.log("value of active button is", activeButton);
+  };
+
+  const handleSetTime = (minutes: string) => {
+    setTimeLeft(Number(minutes) * 60);
+    setIsRunning(false);
+  };
+
+  const handleTyping = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (event.target.value.length > 0) {
+      setIsTyping(true);
+      setIsRunning(true);
+    } else {
+      setIsTyping(false);
+      setIsRunning(false);
+    }
   };
 
   return (
@@ -39,6 +57,7 @@ export default function Home() {
         <textarea
           className="bg-transparent h-full  w-80 resize-none outline-none p-4 m-4 text-white text-xl"
           placeholder="Start typing your thoughts..."
+          onChange={handleTyping}
         />
       </main>
     </div>
