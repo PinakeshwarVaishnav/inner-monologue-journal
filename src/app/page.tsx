@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -7,11 +7,6 @@ export default function Home() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-
-  const handleButtonClick = (value: string) => {
-    setActiveButton(value);
-    console.log("value of active button is", activeButton);
-  };
 
   const handleSetTime = (minutes: string) => {
     setTimeLeft(Number(minutes) * 60);
@@ -26,6 +21,37 @@ export default function Home() {
       setIsTyping(false);
       setIsRunning(false);
     }
+  };
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    if (isRunning && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0 || !isRunning) {
+      if (timer !== null) {
+        clearInterval(timer);
+      }
+    }
+
+    return () => {
+      if (timer !== null) {
+        clearInterval(timer);
+      }
+    };
+  }, [isRunning, timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
+  const handleButtonClick = (value: string) => {
+    setActiveButton(value);
+    handleSetTime(value);
   };
 
   return (
@@ -52,14 +78,13 @@ export default function Home() {
         >
           15 min
         </Button>
+        <div className="text-xl font-bold">{formatTime(timeLeft)}</div>
       </header>
-      <main>
-        <textarea
-          className="bg-transparent h-full  w-80 resize-none outline-none p-4 m-4 text-white text-xl"
-          placeholder="Start typing your thoughts..."
-          onChange={handleTyping}
-        />
-      </main>
+      <textarea
+        className="bg-transparent h-full  w-full resize-none outline-none p-4 m-4 text-white text-xl"
+        placeholder="Start typing your thoughts..."
+        onChange={handleTyping}
+      />
     </div>
   );
 }
