@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -7,6 +7,7 @@ export default function Home() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleSetTime = (minutes: string) => {
     setTimeLeft(Number(minutes) * 60);
@@ -14,13 +15,18 @@ export default function Home() {
   };
 
   const handleTyping = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (event.target.value.length > 0) {
-      setIsTyping(true);
-      setIsRunning(true);
-    } else {
-      setIsTyping(false);
-      setIsRunning(false);
+    const value = event.target.value;
+    setIsTyping(value.length > 0);
+    console.log("the value of currently typing is", isTyping);
+    setIsRunning(value.length > 0);
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
     }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsRunning(false);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -81,7 +87,7 @@ export default function Home() {
         <div className="text-xl font-bold">{formatTime(timeLeft)}</div>
       </header>
       <textarea
-        className="bg-transparent h-full  w-full resize-none outline-none p-4 m-4 text-white text-xl"
+        className="bg-transparent flex-grow h-full  w-full resize-none outline-none p-4 m-4 text-white text-xl"
         placeholder="Start typing your thoughts..."
         onChange={handleTyping}
       />
