@@ -87,7 +87,7 @@ export default function Home() {
         <div className="text-xl font-bold">{formatTime(timeLeft)}</div>
       </header>
       <textarea
-        className="bg-transparent flex-grow h-full  w-full resize-none outline-none p-4 m-4 text-white text-xl"
+        className="bg-transparent flex-grow resize-none outline-none p-4 m-4 text-white text-xl"
         placeholder="Start typing your thoughts..."
         onChange={handleTyping}
       />
